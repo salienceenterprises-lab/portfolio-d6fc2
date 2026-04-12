@@ -1,171 +1,118 @@
 "use client";
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { FaMapMarkerAlt } from "react-icons/fa";
+import { motion } from "framer-motion";
+import { FaBriefcase, FaMapMarkerAlt } from "react-icons/fa";
 
-const NAVY = "#0f172a";
-const BLUE = "#2563eb";
-const GREY = "#64748b";
-
-export default function FintechExperience({ data }) {
-  const list = data?.experience || [];
-  if (!list.length) return null;
-
-  const [active, setActive] = useState(0);
-  const job = list[active];
-
-  const role     = job?.role     || job?.title    || job?.position   || "";
-  const company  = job?.company  || job?.employer || job?.organization || "";
-  const period   = job?.period   || job?.duration || job?.years      || "";
-  const location = job?.location || "";
-
-  const rawBullets =
-    Array.isArray(job?.highlights)       ? job.highlights :
-    Array.isArray(job?.responsibilities) ? job.responsibilities :
-    Array.isArray(job?.bullets)          ? job.bullets : [];
-  const bullets = rawBullets.filter(Boolean);
-
-  const stack =
-    Array.isArray(job?.stack)        ? job.stack :
-    Array.isArray(job?.tags)         ? job.tags :
-    Array.isArray(job?.technologies) ? job.technologies :
-    [];
+export default function PortfolioExperience({ data }) {
+  if (!data?.experience?.length) return null;
 
   return (
-    <section id="experience" style={{ background: "#ffffff", borderTop: "1px solid #e2e8f0" }}>
-      <style>{`
-        @media (max-width: 767px) {
-          .ft-exp-inner { padding: 4rem 1.25rem !important; }
-          .ft-exp-layout { grid-template-columns: 1fr !important; }
-          .ft-exp-sidebar { border-right: none !important; border-bottom: 1px solid #e2e8f0 !important; display: flex !important; overflow-x: auto !important; }
-          .ft-exp-sidebar button { flex-shrink: 0 !important; border-bottom: none !important; border-right: 1px solid #e2e8f0 !important; min-width: 140px !important; }
-          .ft-exp-detail { padding: 1.5rem !important; }
-        }
-      `}</style>
-      <div className="ft-exp-inner" style={{ maxWidth: "1280px", margin: "0 auto", padding: "7rem 2.5rem" }}>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }} transition={{ duration: 0.6 }}
-          style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "4rem" }}
-        >
-          <span style={{ fontSize: "11px", fontWeight: 800, color: BLUE, textTransform: "uppercase", letterSpacing: "0.2em" }}>03</span>
-          <div style={{ width: "40px", height: "2px", background: BLUE }} />
-          <span style={{ fontSize: "11px", fontWeight: 700, color: GREY, textTransform: "uppercase", letterSpacing: "0.18em" }}>Experience</span>
+    <section id="experience" className="relative py-28 px-6 overflow-hidden bg-[#0c0904]">
+
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/3 right-0 w-[500px] h-[500px] rounded-full translate-x-1/3"
+          style={{ background:"radial-gradient(ellipse,rgba(249,115,22,0.06),transparent 70%)" }} />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(251,191,36,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(251,191,36,0.02)_1px,transparent_1px)] bg-[size:64px_64px]" />
+      </div>
+
+      <div className="max-w-4xl mx-auto relative z-10">
+        <motion.div initial={{ opacity:0,x:-20 }} whileInView={{ opacity:1,x:0 }} viewport={{ once:true }} transition={{ duration:0.5 }}
+          className="flex items-center gap-3 mb-3">
+          <span className="text-[10px] font-black tracking-[0.35em] uppercase text-amber-400/70">[ 03 / Experience ]</span>
+          <div className="flex-1 h-px bg-gradient-to-r from-amber-500/25 to-transparent max-w-[100px]" />
         </motion.div>
 
-        <div className="ft-exp-layout" style={{ display: "grid", gridTemplateColumns: "300px 1fr", border: "1px solid #e2e8f0", background: "#f8fafc" }}>
-          {/* Left: company list */}
-          <div className="ft-exp-sidebar" style={{ borderRight: "1px solid #e2e8f0" }}>
-            {list.map((j, i) => {
-              const jCompany = j?.company || j?.employer || j?.organization || "";
-              const jPeriod  = j?.period  || j?.duration || j?.years || "";
-              return (
-                <button
-                  key={i}
-                  onClick={() => setActive(i)}
-                  style={{
-                    display: "block", width: "100%", textAlign: "left",
-                    background: active === i ? "#ffffff" : "transparent",
-                    border: "none",
-                    borderLeft: active === i ? `3px solid ${BLUE}` : "3px solid transparent",
-                    borderBottom: "1px solid #e2e8f0",
-                    padding: "1.4rem 1.8rem",
-                    cursor: "pointer",
-                    transition: "all 0.2s ease",
-                  }}
-                >
-                  <div style={{ fontSize: "13px", fontWeight: 700, color: active === i ? NAVY : GREY, marginBottom: "3px", transition: "color 0.2s" }}>
-                    {jCompany}
-                  </div>
-                  <div style={{ fontSize: "11px", fontWeight: 500, color: active === i ? BLUE : "#94a3b8", transition: "color 0.2s" }}>
-                    {jPeriod}
-                  </div>
-                </button>
-              );
-            })}
-          </div>
+        <motion.h2 initial={{ opacity:0,y:18 }} whileInView={{ opacity:1,y:0 }} viewport={{ once:true }} transition={{ duration:0.6,delay:0.05 }}
+          className="text-4xl sm:text-6xl font-black tracking-tighter text-white mb-4">
+          Career<span className="text-amber-400">.</span>
+        </motion.h2>
+        <motion.p initial={{ opacity:0 }} whileInView={{ opacity:1 }} viewport={{ once:true }} transition={{ duration:0.5,delay:0.15 }}
+          className="text-white/30 text-sm mb-16 max-w-sm">
+          Where I've been and what I've built.
+        </motion.p>
 
-          {/* Right: detail */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={active}
-              initial={{ opacity: 0, x: 16 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -16 }}
-              transition={{ duration: 0.25 }}
-              className="ft-exp-detail"
-              style={{ padding: "2.5rem 3rem", background: "#ffffff" }}
-            >
-              {/* Role */}
-              <div style={{ fontSize: "11px", fontWeight: 700, color: BLUE, textTransform: "uppercase", letterSpacing: "0.18em", marginBottom: "0.4rem" }}>
-                {role}
-              </div>
+        <div className="relative">
+          {/* Timeline spine */}
+          <motion.div initial={{ scaleY:0 }} whileInView={{ scaleY:1 }} viewport={{ once:true }}
+            transition={{ duration:1.8,ease:"easeInOut" }}
+            className="absolute left-[19px] top-3 w-px hidden sm:block origin-top"
+            style={{ height:"calc(100% - 12px)", background:"linear-gradient(180deg,rgba(251,191,36,0.5),rgba(249,115,22,0.2),transparent)" }} />
 
-              {/* Company */}
-              <h3 style={{ fontSize: "clamp(1.4rem, 2.5vw, 2.2rem)", fontWeight: 900, color: NAVY, letterSpacing: "-0.03em", margin: "0 0 0.75rem" }}>
-                {company}
-              </h3>
+          <div className="space-y-7">
+            {data.experience.map((job, index) => (
+              <motion.div key={index}
+                initial={{ opacity:0,x:-30 }} whileInView={{ opacity:1,x:0 }} viewport={{ once:true,margin:"-80px" }}
+                transition={{ duration:0.5,delay:index*0.1,type:"spring",stiffness:100 }}
+                className="relative sm:pl-14">
 
-              {/* Meta: period + location */}
-              <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem", alignItems: "center", marginBottom: "1.5rem" }}>
-                {period && (
-                  <span style={{
-                    fontSize: "11px", fontWeight: 700, color: GREY,
-                    textTransform: "uppercase", letterSpacing: "0.12em",
-                    background: "#f1f5f9", padding: "4px 10px",
-                  }}>
-                    {period}
-                  </span>
-                )}
-                {location && (
-                  <span style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "12px", color: GREY }}>
-                    <FaMapMarkerAlt size={10} /> {location}
-                  </span>
-                )}
-              </div>
-
-              <div style={{ width: "32px", height: "2px", background: BLUE, marginBottom: "1.8rem" }} />
-
-              {/* Description */}
-              {job?.description && (
-                <p style={{ fontSize: "14px", color: GREY, lineHeight: 1.75, fontWeight: 400, marginBottom: "1.5rem" }}>
-                  {job.description}
-                </p>
-              )}
-
-              {/* Bullet points */}
-              {bullets.length > 0 && (
-                <ul style={{ listStyle: "none", padding: 0, margin: "0 0 1.5rem", display: "flex", flexDirection: "column", gap: "0.9rem" }}>
-                  {bullets.map((b, j) => (
-                    <li key={j} style={{ display: "flex", gap: "12px", alignItems: "flex-start" }}>
-                      <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: BLUE, flexShrink: 0, marginTop: "7px" }} />
-                      <span style={{ fontSize: "14px", color: GREY, lineHeight: 1.75, fontWeight: 400 }}>{b}</span>
-                    </li>
-                  ))}
-                </ul>
-              )}
-
-              {/* Tech stack */}
-              {stack.length > 0 && (
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", paddingTop: "1.25rem", borderTop: "1px solid #f1f5f9" }}>
-                  {stack.filter(Boolean).map((tech, j) => {
-                    const label = typeof tech === "string" ? tech : tech?.name || String(tech);
-                    return (
-                      <span key={j} style={{
-                        fontSize: "10px", fontWeight: 600, textTransform: "uppercase",
-                        letterSpacing: "0.08em", color: BLUE,
-                        background: "rgba(37,99,235,0.06)",
-                        border: "1px solid rgba(37,99,235,0.15)",
-                        padding: "3px 10px",
-                      }}>
-                        {label}
-                      </span>
-                    );
-                  })}
+                {/* Timeline dot */}
+                <div className="hidden sm:flex absolute left-0 top-6 w-10 h-10 rounded-full items-center justify-center z-10"
+                  style={{ background:"#0c0904" }}>
+                  <div className="w-3 h-3 rounded-full shadow-[0_0_14px_rgba(251,191,36,0.7)]"
+                    style={{ background:"linear-gradient(135deg,#fbbf24,#f97316)" }} />
                 </div>
-              )}
-            </motion.div>
-          </AnimatePresence>
+
+                <motion.div whileHover={{ x:6 }} transition={{ type:"spring",stiffness:300 }} className="group">
+                  <div className="relative border border-amber-500/15 rounded-2xl p-6 sm:p-7 overflow-hidden transition-all duration-400 hover:border-amber-400/35 hover:shadow-[0_8px_40px_rgba(251,191,36,0.08)]"
+                    style={{ background:"rgba(251,191,36,0.03)" }}>
+                    {/* Inner warm glow on hover */}
+                    <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none"
+                      style={{ background:"linear-gradient(135deg,rgba(251,191,36,0.04),transparent)" }} />
+                    {/* Watermark */}
+                    <span className="absolute right-5 top-4 text-6xl font-black select-none leading-none tabular-nums"
+                      style={{ WebkitTextFillColor:"transparent", WebkitTextStrokeWidth:"1px", WebkitTextStrokeColor:"rgba(251,191,36,0.06)" }}>
+                      {String(index+1).padStart(2,"0")}
+                    </span>
+
+                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4 relative z-10">
+                      <div>
+                        <h3 className="text-base font-black text-white group-hover:text-amber-200 transition-colors duration-300">{job.role}</h3>
+                        <div className="flex items-center gap-2 mt-1.5">
+                          <FaBriefcase className="w-3 h-3 text-amber-400/60" />
+                          <span className="text-sm font-bold text-amber-400/80">{job.company}</span>
+                        </div>
+                      </div>
+                      <div className="flex flex-col items-start sm:items-end gap-1.5 flex-shrink-0">
+                        <span className="text-[10px] font-bold text-white/35 border border-amber-500/15 px-3 py-1 rounded-full"
+                          style={{ background:"rgba(251,191,36,0.06)" }}>
+                          {job.period}
+                        </span>
+                        {job.location && (
+                          <span className="flex items-center gap-1 text-[10px] text-white/25">
+                            <FaMapMarkerAlt className="w-2.5 h-2.5" /> {job.location}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {job.description && <p className="text-sm text-white/40 leading-relaxed mb-4 relative z-10">{job.description}</p>}
+
+                    {job.highlights?.length > 0 && (
+                      <ul className="space-y-2 mb-4 relative z-10">
+                        {job.highlights.filter(h=>h?.trim()).map((h,i) => (
+                          <li key={i} className="flex items-start gap-3 text-sm text-white/35">
+                            <div className="mt-2 w-1.5 h-1.5 rounded-full flex-shrink-0"
+                              style={{ background:"linear-gradient(135deg,#fbbf24,#f97316)" }} />
+                            {h}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+
+                    {job.stack?.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 pt-4 border-t border-white/[0.05] relative z-10">
+                        {job.stack.filter(t=>t?.trim()).map((tech) => (
+                          <span key={tech} className="text-[9px] font-black uppercase tracking-wider text-amber-400/55 px-2.5 py-1 rounded-full border border-amber-500/15"
+                            style={{ background:"rgba(251,191,36,0.05)" }}>
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </motion.div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
