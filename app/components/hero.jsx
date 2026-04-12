@@ -1,273 +1,181 @@
 "use client";
-import React from "react";
 import { motion } from "framer-motion";
-import { FaArrowRight, FaLinkedin, FaGithub } from "react-icons/fa";
+import { FaDownload, FaEnvelope, FaChevronDown } from "react-icons/fa";
 
-const NAVY = "#0f172a";
-const BLUE = "#2563eb";
-const BLUE_L = "#3b82f6";
-const GREY = "#64748b";
-
-const fadeUp = (delay = 0) => ({
-  initial: { opacity: 0, y: 24 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.65, ease: [0.25, 1, 0.5, 1], delay },
-});
-
-export default function FintechHero({ data }) {
-  const hasPhoto = !!data?.heroImageBase64;
-  const resumeSource = data?.resumeBase64 || data?.resume || data?.resumeUrl;
-  const nameParts = (data?.name || "Portfolio").split(" ");
-
-  const scrollTo = (id) => {
-    const el = document.getElementById(id);
-    if (el) window.scrollTo({ top: el.offsetTop - 72, behavior: "smooth" });
-  };
+export default function PortfolioHero({ data }) {
+  const scrollToContact = () =>
+    document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
 
   const stats = [
-    data?.experience?.length && { label: "Years of Experience", value: `${data.experience.length}+` },
-    data?.projects?.length   && { label: "Projects Delivered",  value: `${data.projects.length}+`   },
-    data?.skills?.length     && { label: "Technologies",        value: `${Math.min(data.skills.flat?.()?.length || data.skills.length, 20)}+` },
+    data?.experience?.length > 0 && { label: "Roles", value: data.experience.length },
+    data?.projects?.length > 0 && { label: "Projects", value: data.projects.length },
+    data?.skills?.length > 0 && { label: "Skills", value: data.skills.length },
   ].filter(Boolean);
 
+  const firstName = data?.name?.split(" ")[0] || "";
+  const lastName = data?.name?.split(" ").slice(1).join(" ") || "";
+
   return (
-    <section id="hero" style={{
-      minHeight: "100vh",
-      background: "linear-gradient(160deg, #f8fafc 0%, #eef2f7 50%, #f0f4ff 100%)",
-      display: "flex", alignItems: "center",
-      position: "relative", overflow: "hidden",
-      paddingTop: "68px",
-    }}>
-      <style>{`
-        @media (max-width: 767px) {
-          .ft-hero-inner { padding: 3rem 1.25rem !important; }
-          .ft-hero-grid { grid-template-columns: 1fr !important; gap: 2rem !important; }
-          .ft-hero-photo { display: none !important; }
-        }
-      `}</style>
-      {/* Decorative grid */}
-      <div style={{
-        position: "absolute", inset: 0, pointerEvents: "none",
-        backgroundImage: `linear-gradient(rgba(37,99,235,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(37,99,235,0.04) 1px, transparent 1px)`,
-        backgroundSize: "64px 64px",
-      }} />
+    <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0c0904]">
 
-      {/* Blue geometric accent — top right */}
-      <div style={{
-        position: "absolute", top: 0, right: 0,
-        width: "420px", height: "420px",
-        background: "linear-gradient(135deg, rgba(37,99,235,0.07) 0%, transparent 60%)",
-        pointerEvents: "none",
-      }} />
-      <div style={{
-        position: "absolute", top: "68px", right: 0,
-        width: "3px", height: "180px",
-        background: `linear-gradient(to bottom, ${BLUE}, transparent)`,
-        pointerEvents: "none",
-      }} />
+      {/* Radial warm glow */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_30%,rgba(251,191,36,0.08)_0%,transparent_65%)] pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_20%_80%,rgba(249,115,22,0.06)_0%,transparent_55%)] pointer-events-none" />
 
-      <div className="ft-hero-inner" style={{ maxWidth: "1280px", margin: "0 auto", padding: "5rem 2.5rem", width: "100%", position: "relative", zIndex: 1 }}>
-        <div className="ft-hero-grid" style={{
-          display: "grid",
-          gridTemplateColumns: hasPhoto ? "1fr 400px" : "1fr",
-          gap: "5rem", alignItems: "center",
-        }}>
-          {/* Left: text */}
-          <div>
-            {/* Role tag */}
-            <motion.div {...fadeUp(0)} style={{ marginBottom: "1.8rem" }}>
-              <span style={{
-                display: "inline-flex", alignItems: "center", gap: "8px",
-                fontSize: "11px", fontWeight: 700,
-                textTransform: "uppercase", letterSpacing: "0.18em",
-                color: BLUE,
-                background: "rgba(37,99,235,0.07)",
-                border: "1px solid rgba(37,99,235,0.15)",
-                padding: "5px 14px",
-              }}>
-                <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: BLUE, display: "inline-block" }} />
-                {data?.title || "Finance & Technology Professional"}
-              </span>
-            </motion.div>
+      {/* Warm grid */}
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(251,191,36,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(251,191,36,0.025)_1px,transparent_1px)] bg-[size:64px_64px] pointer-events-none" />
 
-            {/* Name */}
-            <motion.h1 {...fadeUp(0.1)} style={{
-              fontSize: "clamp(3rem, 6.5vw, 6.5rem)",
-              fontWeight: 900,
-              color: NAVY,
-              letterSpacing: "-0.04em",
-              lineHeight: 0.92,
-              margin: "0 0 2rem",
-            }}>
-              {nameParts.map((word, i) => (
-                <span key={i} style={{ display: "block" }}>
-                  {i === nameParts.length - 1
-                    ? <span style={{ color: BLUE }}>{word}</span>
-                    : word}
-                </span>
+
+      <div className={`relative z-20 max-w-6xl mx-auto px-6 w-full grid gap-16 items-center py-32 min-h-screen ${data?.heroImageBase64 ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1 max-w-3xl"}`}>
+
+        {/* Left */}
+        <div className={`order-2 md:order-1 ${!data?.heroImageBase64 ? "flex flex-col items-center text-center" : ""}`}>
+
+          {/* Badge */}
+          <motion.div
+            initial={{ opacity: 0, y: -12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="flex items-center gap-3 mb-8"
+          >
+            <div className="flex gap-1">
+              {[0,1,2].map(i => (
+                <div key={i} className="w-1.5 h-1.5 rounded-full bg-amber-400" />
               ))}
-            </motion.h1>
+            </div>
+            <span className="text-[10px] font-black tracking-[0.4em] uppercase text-amber-400/80">{data?.title}</span>
+          </motion.div>
 
-            {/* Bio */}
-            {(data?.sloganHeroSection || data?.bio) && (
-              <motion.p {...fadeUp(0.2)} style={{
-                fontSize: "16px", fontWeight: 400,
-                color: GREY, lineHeight: 1.8,
-                maxWidth: "520px", margin: "0 0 2.5rem",
-                borderLeft: `3px solid ${BLUE}`,
-                paddingLeft: "1.2rem",
-              }}>
-                {data?.sloganHeroSection || data?.bio?.slice(0, 180) + "…"}
-              </motion.p>
-            )}
-
-            {/* CTAs */}
-            <motion.div {...fadeUp(0.3)} style={{ display: "flex", flexWrap: "wrap", gap: "12px", alignItems: "center", marginBottom: "3rem" }}>
-              <button
-                onClick={() => scrollTo("contact")}
-                style={{
-                  display: "inline-flex", alignItems: "center", gap: "10px",
-                  background: BLUE, color: "#fff",
-                  border: "none", padding: "13px 32px",
-                  fontSize: "13px", fontWeight: 700,
-                  letterSpacing: "0.03em", cursor: "pointer",
-                  boxShadow: "0 4px 20px rgba(37,99,235,0.3)",
-                  transition: "all 0.25s ease",
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.background = "#1d4ed8"; e.currentTarget.style.boxShadow = "0 6px 28px rgba(37,99,235,0.45)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = BLUE; e.currentTarget.style.boxShadow = "0 4px 20px rgba(37,99,235,0.3)"; }}
-              >
-                Get In Touch <FaArrowRight size={11} />
-              </button>
-              <button
-                onClick={() => scrollTo("projects")}
-                style={{
-                  background: "transparent", color: NAVY,
-                  border: "1.5px solid #cbd5e1", padding: "12px 28px",
-                  fontSize: "13px", fontWeight: 600,
-                  cursor: "pointer", transition: "all 0.25s ease",
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.borderColor = BLUE; e.currentTarget.style.color = BLUE; }}
-                onMouseLeave={(e) => { e.currentTarget.style.borderColor = "#cbd5e1"; e.currentTarget.style.color = NAVY; }}
-              >
-                View Work
-              </button>
-              {/* Social icons */}
-              {data?.linkedin && (
-                <a href={data.linkedin} target="_blank" rel="noopener noreferrer"
-                  style={{ color: GREY, transition: "color 0.2s" }}
-                  onMouseEnter={(e) => e.currentTarget.style.color = BLUE}
-                  onMouseLeave={(e) => e.currentTarget.style.color = GREY}
-                >
-                  <FaLinkedin size={20} />
-                </a>
-              )}
-              {data?.github && (
-                <a href={data.github} target="_blank" rel="noopener noreferrer"
-                  style={{ color: GREY, transition: "color 0.2s" }}
-                  onMouseEnter={(e) => e.currentTarget.style.color = NAVY}
-                  onMouseLeave={(e) => e.currentTarget.style.color = GREY}
-                >
-                  <FaGithub size={20} />
-                </a>
-              )}
+          {/* Name */}
+          <div className="mb-8 overflow-hidden">
+            <motion.div
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <h1 className="font-black tracking-tighter leading-none text-white w-full break-words"
+                style={{ fontSize: "clamp(2.5rem, 8vw, 5rem)" }}>
+                {firstName}
+              </h1>
             </motion.div>
-
-            {/* Stats row */}
-            {stats.length > 0 && (
-              <motion.div {...fadeUp(0.4)} style={{
-                display: "flex", gap: "0",
-                borderTop: "1px solid #e2e8f0",
-                paddingTop: "2rem",
-              }}>
-                {stats.map((stat, i) => (
-                  <div key={i} style={{
-                    paddingRight: "2.5rem",
-                    marginRight: "2.5rem",
-                    borderRight: i < stats.length - 1 ? "1px solid #e2e8f0" : "none",
-                  }}>
-                    <div style={{ fontSize: "clamp(1.8rem, 3vw, 2.8rem)", fontWeight: 900, color: NAVY, letterSpacing: "-0.04em", lineHeight: 1 }}>
-                      {stat.value}
-                    </div>
-                    <div style={{ fontSize: "11px", fontWeight: 600, color: GREY, textTransform: "uppercase", letterSpacing: "0.1em", marginTop: "4px" }}>
-                      {stat.label}
-                    </div>
-                  </div>
-                ))}
-              </motion.div>
-            )}
+            <motion.div
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              transition={{ duration: 0.7, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <h1 className="font-black tracking-tighter leading-none w-full break-words"
+                style={{
+                  fontSize: "clamp(2.5rem, 8vw, 5rem)",
+                  background: "linear-gradient(135deg, #fbbf24 0%, #f97316 60%, #ef4444 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}>
+                {lastName || "\u00A0"}
+              </h1>
+            </motion.div>
           </div>
 
-          {/* Right: photo */}
-          {hasPhoto && (
-            <motion.div className="ft-hero-photo"
-              initial={{ opacity: 0, x: 32 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.75, delay: 0.2, ease: [0.25, 1, 0.5, 1] }}
-              style={{ position: "relative" }}
+          {/* Slogan */}
+          <motion.p
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.7 }}
+            className="text-white/35 text-sm leading-relaxed max-w-xs mb-10"
+          >
+            {data?.sloganHeroSection}
+          </motion.p>
+
+          {/* CTAs */}
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.9 }}
+            className="flex flex-wrap gap-4 mb-12"
+          >
+            {data?.resumeBase64 && (
+              <motion.a
+                whileHover={{ scale: 1.03, boxShadow: "0 0 35px rgba(251,191,36,0.35)" }}
+                whileTap={{ scale: 0.97 }}
+                href={`data:application/pdf;base64,${data.resumeBase64}`}
+                download={`${data.name || "Resume"}.pdf`}
+                className="flex items-center gap-2.5 px-7 py-3.5 font-black text-xs uppercase tracking-[0.15em] text-black rounded-full transition-all shadow-lg"
+                style={{ background: "linear-gradient(135deg, #fbbf24, #f97316)" }}
+              >
+                <FaDownload className="w-3.5 h-3.5" /> Resume
+              </motion.a>
+            )}
+            <motion.button
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={scrollToContact}
+              className="flex items-center gap-2.5 px-7 py-3.5 border border-amber-500/30 text-white/60 text-xs font-black rounded-full hover:border-amber-400/60 hover:text-white/90 transition-all uppercase tracking-[0.15em]"
             >
-              {/* Blue accent corner */}
-              <div style={{
-                position: "absolute", top: "-12px", left: "-12px",
-                width: "48px", height: "48px",
-                borderTop: `3px solid ${BLUE}`,
-                borderLeft: `3px solid ${BLUE}`,
-              }} />
-              <div style={{
-                position: "absolute", bottom: "-12px", right: "-12px",
-                width: "48px", height: "48px",
-                borderBottom: `3px solid ${BLUE}`,
-                borderRight: `3px solid ${BLUE}`,
-              }} />
+              <FaEnvelope className="w-3.5 h-3.5 text-amber-400" /> Contact
+            </motion.button>
+          </motion.div>
 
-              <div style={{
-                overflow: "hidden",
-                border: "1px solid #e2e8f0",
-                boxShadow: "0 20px 60px rgba(15,23,42,0.1)",
-              }}>
-                <img
-                  src={data.heroImageBase64}
-                  alt={data.name}
-                  style={{
-                    width: "100%", height: "480px",
-                    objectFit: "cover", objectPosition: "center top",
-                    display: "block",
-                    filter: "brightness(1.02) saturate(0.9)",
-                  }}
-                />
-              </div>
-
-              {/* Resume badge */}
-              {resumeSource && (
-                <a
-                  href={data?.resumeBase64 ? `data:application/pdf;base64,${data.resumeBase64}` : resumeSource}
-                  download="Resume.pdf"
-                  style={{
-                    position: "absolute", bottom: "24px", left: "-24px",
-                    background: "#ffffff",
-                    border: "1px solid #e2e8f0",
-                    boxShadow: "0 8px 24px rgba(15,23,42,0.1)",
-                    padding: "12px 20px",
-                    display: "flex", alignItems: "center", gap: "10px",
-                    textDecoration: "none",
-                    transition: "box-shadow 0.2s ease",
-                  }}
-                  onMouseEnter={(e) => e.currentTarget.style.boxShadow = "0 12px 32px rgba(37,99,235,0.15)"}
-                  onMouseLeave={(e) => e.currentTarget.style.boxShadow = "0 8px 24px rgba(15,23,42,0.1)"}
-                >
-                  <div style={{ width: "32px", height: "32px", background: "rgba(37,99,235,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <FaArrowRight size={12} style={{ color: BLUE, transform: "rotate(90deg)" }} />
+          {/* Stats */}
+          {stats.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 1.2 }}
+              className="flex items-center gap-10 pt-8 border-t border-white/[0.06]"
+            >
+              {stats.map((s, i) => (
+                <div key={i}>
+                  <div className="text-3xl font-black tabular-nums"
+                    style={{ background: "linear-gradient(135deg,#fbbf24,#f97316)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text" }}>
+                    {String(s.value).padStart(2, "0")}
                   </div>
-                  <div>
-                    <div style={{ fontSize: "11px", fontWeight: 800, color: NAVY, textTransform: "uppercase", letterSpacing: "0.08em" }}>Résumé</div>
-                    <div style={{ fontSize: "10px", color: GREY }}>Download PDF</div>
-                  </div>
-                </a>
-              )}
+                  <div className="text-[9px] font-bold uppercase tracking-[0.3em] text-white/25 mt-0.5">{s.label}</div>
+                </div>
+              ))}
             </motion.div>
           )}
         </div>
+
+        {/* Right: Photo */}
+        <div className="order-1 md:order-2 flex justify-center items-center">
+          {data?.heroImageBase64 ? (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.9, delay: 0.2, type: "spring", stiffness: 70, damping: 14 }}
+              className="relative w-64 h-72 sm:w-80 sm:h-96"
+            >
+              {/* Warm glow */}
+              <div className="absolute inset-0 scale-110 blur-3xl rounded-[60%_40%_50%_50%]"
+                style={{ background: "radial-gradient(ellipse,rgba(251,191,36,0.25),rgba(249,115,22,0.1),transparent 70%)" }} />
+
+              {/* Static orbit ring */}
+              <div className="absolute -inset-4 border border-dashed border-amber-400/15 rounded-[60%_40%_55%_45%]" />
+
+              {/* Photo in organic blob */}
+              <div className="absolute inset-0 overflow-hidden border-2 border-amber-400/30 rounded-[60%_40%_55%_45%]">
+                <img src={data.heroImageBase64} alt={data.name}
+                  className="w-full h-full object-cover scale-110" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0c0904]/50 to-transparent" />
+              </div>
+
+              {/* Accent dots */}
+              {[["-top-2","-right-2"],["-bottom-2","-left-2"]].map(([t,l],i) => (
+                <div key={i}
+                  className={`absolute ${t} ${l} w-3 h-3 rounded-full shadow-[0_0_12px_rgba(251,191,36,0.8)]`}
+                  style={{ background: "linear-gradient(135deg,#fbbf24,#f97316)" }}
+                />
+              ))}
+            </motion.div>
+          ) : null}
+        </div>
       </div>
+
+      {/* Scroll cue */}
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20">
+        <FaChevronDown className="w-3.5 h-3.5 text-amber-400/35" />
+      </motion.div>
     </section>
   );
 }
