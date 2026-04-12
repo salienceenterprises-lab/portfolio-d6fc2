@@ -1,235 +1,147 @@
 "use client";
 import React, { useState } from "react";
-import { motion } from "framer-motion";
-import { FaGithub, FaLinkedin, FaEnvelope, FaArrowRight } from "react-icons/fa";
+import { motion, AnimatePresence } from "framer-motion";
+import { FaPaperPlane, FaEnvelope, FaGithub, FaLinkedin, FaCheckCircle, FaCircleNotch } from "react-icons/fa";
 
-const NAVY = "#0f172a";
-const BLUE = "#2563eb";
-const GREY = "#64748b";
-
-export default function FintechContact({ data }) {
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
+export default function PortfolioContact({ data }) {
+  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [status, setStatus] = useState("idle");
-  const [focused, setFocused] = useState(null);
 
-  const WEB3FORMS_KEY = data?.web3forms_key ?? "";
+  const hasForm = !!data?.web3forms_key;
+
+  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.name || !form.email || !form.message) return;
-    setStatus("sending");
+    if (!hasForm) return;
+    setStatus("loading");
     try {
       const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({
-          access_key: WEB3FORMS_KEY,
-          subject: `Portfolio Contact from ${form.name}`,
-          from_name: form.name,
-          email: form.email,
-          message: form.message,
+          ...formData,
+          access_key: data.web3forms_key,
+          subject: `New Portfolio Message from ${formData.name}`,
+          from_name: "Portfolio Contact Form",
           botcheck: "",
         }),
       });
-      const r = await res.json();
-      setStatus(r.success ? "sent" : "error");
-    } catch {
-      setStatus("error");
-    }
+      const result = await res.json();
+      if (result.success) {
+        setStatus("success");
+        setFormData({ name: "", email: "", message: "" });
+        setTimeout(() => setStatus("idle"), 5000);
+      } else { setStatus("error"); }
+    } catch { setStatus("error"); }
   };
 
-  const inputStyle = (field) => ({
-    width: "100%",
-    background: "#ffffff",
-    border: "1px solid",
-    borderColor: focused === field ? BLUE : "#e2e8f0",
-    color: NAVY,
-    fontSize: "14px",
-    padding: "12px 16px",
-    outline: "none",
-    transition: "border-color 0.2s ease, box-shadow 0.2s ease",
-    fontFamily: "inherit",
-    fontWeight: 400,
-    boxSizing: "border-box",
-    boxShadow: focused === field ? "0 0 0 3px rgba(37,99,235,0.08)" : "none",
-  });
+  const contactLinks = [
+    { show: data?.email,    icon: FaEnvelope,  label: "Email",    value: data?.email,    href: `mailto:${data?.email}`, colorClass: "text-amber-400",  borderStyle: "border-amber-500/25", bgStyle: "rgba(251,191,36,0.07)"  },
+    { show: data?.github,   icon: FaGithub,    label: "GitHub",   value: "View Profile", href: data?.github,            colorClass: "text-white/60",   borderStyle: "border-white/10",    bgStyle: "rgba(255,255,255,0.04)" },
+    { show: data?.linkedin, icon: FaLinkedin,  label: "LinkedIn", value: "Connect",      href: data?.linkedin,          colorClass: "text-orange-300", borderStyle: "border-orange-500/20", bgStyle: "rgba(249,115,22,0.07)"  },
+  ].filter(l => l.show);
 
-  const socials = [
-    data?.github   && { icon: <FaGithub size={16} />,   href: data.github,            label: "GitHub" },
-    data?.linkedin && { icon: <FaLinkedin size={16} />,  href: data.linkedin,          label: "LinkedIn" },
-    data?.email    && { icon: <FaEnvelope size={16} />,  href: `mailto:${data.email}`, label: "Email" },
-  ].filter(Boolean);
+  if (!hasForm && contactLinks.length === 0) return null;
 
   return (
-    <section id="contact" style={{
-      background: "#ffffff",
-      borderTop: "1px solid #e2e8f0",
-    }}>
-      <style>{`
-        @media (max-width: 767px) {
-          .ft-contact-inner { padding: 4rem 1.25rem 3rem !important; }
-          .ft-contact-grid { grid-template-columns: 1fr !important; gap: 2.5rem !important; }
-        }
-      `}</style>
-      {/* Top blue stripe */}
-      <div style={{ height: "4px", background: `linear-gradient(90deg, ${BLUE}, #60a5fa)` }} />
+    <section id="contact" className="relative py-28 px-6 overflow-hidden bg-[#100b05]">
 
-      <div className="ft-contact-inner" style={{ maxWidth: "1280px", margin: "0 auto", padding: "7rem 2.5rem 5rem" }}>
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }} transition={{ duration: 0.6 }}
-          style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "3rem" }}
-        >
-          <span style={{ fontSize: "11px", fontWeight: 800, color: BLUE, textTransform: "uppercase", letterSpacing: "0.2em" }}>07</span>
-          <div style={{ width: "40px", height: "2px", background: BLUE }} />
-          <span style={{ fontSize: "11px", fontWeight: 700, color: GREY, textTransform: "uppercase", letterSpacing: "0.18em" }}>Contact</span>
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(251,191,36,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(251,191,36,0.02)_1px,transparent_1px)] bg-[size:64px_64px] pointer-events-none" />
+
+      <div className="max-w-4xl mx-auto relative z-10">
+        <motion.div initial={{ opacity:0,x:-20 }} whileInView={{ opacity:1,x:0 }} viewport={{ once:true }} transition={{ duration:0.5 }}
+          className="flex items-center gap-3 mb-3">
+          <span className="text-[10px] font-black tracking-[0.35em] uppercase text-amber-400/70">[ 07 / Contact ]</span>
+          <div className="flex-1 h-px bg-gradient-to-r from-amber-500/25 to-transparent max-w-[100px]" />
         </motion.div>
 
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.05 }}
-          style={{
-            fontSize: "clamp(2.4rem, 5vw, 4.5rem)",
-            fontWeight: 900, color: NAVY,
-            letterSpacing: "-0.04em", lineHeight: 1.05,
-            margin: "0 0 5rem",
-          }}
-        >
-          Let's Start a<br />
-          <span style={{ color: BLUE }}>Conversation.</span>
+        <motion.h2 initial={{ opacity:0,y:18 }} whileInView={{ opacity:1,y:0 }} viewport={{ once:true }} transition={{ duration:0.6,delay:0.05 }}
+          className="text-4xl sm:text-6xl font-black tracking-tighter text-white mb-4">
+          Let's Talk<span className="text-amber-400">.</span>
         </motion.h2>
+        <motion.p initial={{ opacity:0 }} whileInView={{ opacity:1 }} viewport={{ once:true }} transition={{ duration:0.5,delay:0.15 }}
+          className="text-white/30 text-sm mb-16 max-w-sm">
+          {hasForm ? "Have a project in mind? Drop me a message." : "Connect with me across the web."}
+        </motion.p>
 
-        <div className="ft-contact-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "5rem" }}>
-          {/* Left: info */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }} transition={{ duration: 0.55 }}
-          >
-            <p style={{ fontSize: "15px", color: GREY, lineHeight: 1.8, maxWidth: "380px", margin: "0 0 2.5rem", fontWeight: 400 }}>
-              Open to full-time roles, strategic partnerships, and consulting engagements. I respond within 24 hours.
-            </p>
+        <div className={`grid gap-10 ${hasForm ? "grid-cols-1 lg:grid-cols-5" : "max-w-md"}`}>
 
-            {data?.email && (
-              <a href={`mailto:${data.email}`}
-                style={{
-                  display: "inline-flex", alignItems: "center", gap: "10px",
-                  fontSize: "14px", fontWeight: 600, color: NAVY,
-                  textDecoration: "none", marginBottom: "2.5rem",
-                  transition: "color 0.2s",
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.color = BLUE}
-                onMouseLeave={(e) => e.currentTarget.style.color = NAVY}
-              >
-                <FaArrowRight size={12} style={{ color: BLUE }} />
-                {data.email}
-              </a>
-            )}
-
-            {socials.length > 0 && (
-              <div style={{ display: "flex", gap: "10px" }}>
-                {socials.map((s, i) => (
-                  <a key={i} href={s.href} target="_blank" rel="noopener noreferrer"
-                    aria-label={s.label}
-                    style={{
-                      width: "42px", height: "42px",
-                      border: "1px solid #e2e8f0",
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                      color: GREY, textDecoration: "none",
-                      transition: "all 0.2s ease",
-                    }}
-                    onMouseEnter={(e) => { e.currentTarget.style.borderColor = BLUE; e.currentTarget.style.color = BLUE; e.currentTarget.style.background = "rgba(37,99,235,0.05)"; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.borderColor = "#e2e8f0"; e.currentTarget.style.color = GREY; e.currentTarget.style.background = "transparent"; }}
-                  >
-                    {s.icon}
-                  </a>
-                ))}
-              </div>
-            )}
+          {/* Links */}
+          <motion.div initial={{ opacity:0,x:hasForm?-30:0 }} whileInView={{ opacity:1,x:0 }} viewport={{ once:true }}
+            transition={{ type:"spring",stiffness:100,damping:20 }}
+            className={`${hasForm?"lg:col-span-2":""} space-y-3`}>
+            {contactLinks.map((link, i) => (
+              <motion.a key={i} href={link.href} target="_blank" rel="noopener noreferrer"
+                whileHover={{ x:6 }} transition={{ type:"spring",stiffness:300 }}
+                className={`group flex items-center gap-4 p-4 border ${link.borderStyle} rounded-2xl hover:brightness-125 transition-all duration-300`}
+                style={{ background:link.bgStyle }}>
+                <div className={`w-11 h-11 rounded-xl border ${link.borderStyle} flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300`}
+                  style={{ background:link.bgStyle }}>
+                  <link.icon className={`w-4 h-4 ${link.colorClass}`} />
+                </div>
+                <div>
+                  <p className="text-[9px] font-black uppercase tracking-[0.3em] text-white/25 mb-0.5">{link.label}</p>
+                  <p className="text-sm text-white/50 group-hover:text-white/90 transition-colors duration-300">{link.value}</p>
+                </div>
+              </motion.a>
+            ))}
           </motion.div>
 
-          {/* Right: form (only when web3forms key is configured) */}
-          {WEB3FORMS_KEY && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }} transition={{ duration: 0.55, delay: 0.1 }}
-          >
-            {status === "sent" ? (
-              <div style={{
-                border: `1px solid rgba(37,99,235,0.25)`,
-                background: "rgba(37,99,235,0.03)",
-                padding: "3rem", textAlign: "center",
-              }}>
-                <div style={{
-                  width: "52px", height: "52px", background: BLUE,
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  margin: "0 auto 1.5rem", fontSize: "22px", color: "#fff",
-                }}>✓</div>
-                <h3 style={{ fontSize: "18px", fontWeight: 800, color: NAVY, marginBottom: "0.5rem" }}>Message Sent</h3>
-                <p style={{ fontSize: "13px", color: GREY }}>I'll be in touch shortly.</p>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
-                <div>
-                  <label style={{ display: "block", fontSize: "11px", fontWeight: 700, color: GREY, textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: "6px" }}>Full Name</label>
-                  <input type="text" placeholder="Jane Smith" required
-                    value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    onFocus={() => setFocused("name")} onBlur={() => setFocused(null)}
-                    style={inputStyle("name")} />
+          {/* Form */}
+          {hasForm && (
+            <motion.div initial={{ opacity:0,y:20 }} whileInView={{ opacity:1,y:0 }} viewport={{ once:true }}
+              transition={{ type:"spring",stiffness:100,damping:20,delay:0.15 }}
+              className="lg:col-span-3">
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {["name","email"].map((field) => (
+                    <div key={field} className="space-y-1.5">
+                      <label className="text-[9px] font-black uppercase tracking-[0.3em] text-white/30">{field}</label>
+                      <input name={field} type={field==="email"?"email":"text"} value={formData[field]} onChange={handleChange} required
+                        placeholder={field==="email"?"your@email.com":"Your name"}
+                        className="w-full px-4 py-3 rounded-xl text-sm text-white placeholder-white/15 focus:outline-none transition-all duration-300 border"
+                        style={{ background:"rgba(251,191,36,0.04)", borderColor:"rgba(251,191,36,0.15)" }}
+                        onFocus={e=>{ e.target.style.borderColor="rgba(251,191,36,0.5)"; e.target.style.background="rgba(251,191,36,0.07)"; }}
+                        onBlur={e=>{ e.target.style.borderColor="rgba(251,191,36,0.15)"; e.target.style.background="rgba(251,191,36,0.04)"; }} />
+                    </div>
+                  ))}
                 </div>
-                <div>
-                  <label style={{ display: "block", fontSize: "11px", fontWeight: 700, color: GREY, textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: "6px" }}>Email Address</label>
-                  <input type="email" placeholder="jane@company.com" required
-                    value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })}
-                    onFocus={() => setFocused("email")} onBlur={() => setFocused(null)}
-                    style={inputStyle("email")} />
+                <div className="space-y-1.5">
+                  <label className="text-[9px] font-black uppercase tracking-[0.3em] text-white/30">Message</label>
+                  <textarea name="message" value={formData.message} onChange={handleChange} required rows={5}
+                    placeholder="Tell me about your project..."
+                    className="w-full px-4 py-3 rounded-xl text-sm text-white placeholder-white/15 focus:outline-none transition-all duration-300 resize-none border"
+                    style={{ background:"rgba(251,191,36,0.04)", borderColor:"rgba(251,191,36,0.15)" }}
+                    onFocus={e=>{ e.target.style.borderColor="rgba(251,191,36,0.5)"; e.target.style.background="rgba(251,191,36,0.07)"; }}
+                    onBlur={e=>{ e.target.style.borderColor="rgba(251,191,36,0.15)"; e.target.style.background="rgba(251,191,36,0.04)"; }} />
                 </div>
-                <div>
-                  <label style={{ display: "block", fontSize: "11px", fontWeight: 700, color: GREY, textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: "6px" }}>Message</label>
-                  <textarea rows={4} placeholder="Tell me about the opportunity…" required
-                    value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })}
-                    onFocus={() => setFocused("message")} onBlur={() => setFocused(null)}
-                    style={{ ...inputStyle("message"), resize: "none" }} />
-                </div>
-                <button
-                  type="submit" disabled={status === "sending"}
-                  style={{
-                    display: "inline-flex", alignItems: "center", gap: "10px",
-                    background: status === "sending" ? GREY : BLUE,
-                    color: "#fff", border: "none",
-                    padding: "13px 32px", fontSize: "13px", fontWeight: 700,
-                    letterSpacing: "0.04em", cursor: status === "sending" ? "not-allowed" : "pointer",
-                    transition: "all 0.2s ease", width: "fit-content",
-                    boxShadow: status === "sending" ? "none" : "0 4px 16px rgba(37,99,235,0.25)",
-                  }}
-                  onMouseEnter={(e) => { if (status !== "sending") e.currentTarget.style.background = "#1d4ed8"; }}
-                  onMouseLeave={(e) => { if (status !== "sending") e.currentTarget.style.background = BLUE; }}
-                >
-                  {status === "sending" ? "Sending…" : <>Send Message <FaArrowRight size={11} /></>}
-                </button>
-                {status === "error" && (
-                  <p style={{ fontSize: "12px", color: "#ef4444", margin: 0 }}>Something went wrong. Please try again.</p>
-                )}
+                <motion.button type="submit" disabled={status==="loading"||status==="success"}
+                  whileHover={{ scale:1.02,boxShadow:"0 0 30px rgba(251,191,36,0.3)" }} whileTap={{ scale:0.98 }}
+                  className={`inline-flex items-center gap-3 px-8 py-3.5 rounded-full font-black text-sm transition-all duration-300 ${
+                    status==="success" ? "bg-emerald-600 text-white" : "text-black shadow-lg"
+                  }`}
+                  style={status==="success"?{}:{ background:"linear-gradient(135deg,#fbbf24,#f97316)" }}>
+                  <AnimatePresence mode="wait">
+                    {status==="loading" ? (
+                      <motion.span key="l" initial={{ opacity:0 }} animate={{ opacity:1 }} className="flex items-center gap-2">
+                        <FaCircleNotch className="w-4 h-4 animate-spin" /> Sending...
+                      </motion.span>
+                    ) : status==="success" ? (
+                      <motion.span key="s" initial={{ y:10,opacity:0 }} animate={{ y:0,opacity:1 }} className="flex items-center gap-2">
+                        <FaCheckCircle className="w-4 h-4" /> Message Sent!
+                      </motion.span>
+                    ) : (
+                      <motion.span key="i" initial={{ opacity:0 }} animate={{ opacity:1 }} className="flex items-center gap-2">
+                        Send Message <FaPaperPlane className="w-3.5 h-3.5" />
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                </motion.button>
+                {status==="error" && <p className="text-xs text-red-400 mt-2">Something went wrong. Please try again.</p>}
               </form>
-            )}
-          </motion.div>
+            </motion.div>
           )}
-        </div>
-
-        {/* Footer */}
-        <div style={{
-          display: "flex", alignItems: "center", justifyContent: "space-between",
-          marginTop: "5rem", paddingTop: "2rem",
-          borderTop: "1px solid #e2e8f0",
-          flexWrap: "wrap", gap: "1rem",
-        }}>
-          <span style={{ fontSize: "12px", color: "#94a3b8" }}>
-            © {new Date().getFullYear()} {data?.name} — All rights reserved
-          </span>
-          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            <div style={{ width: "8px", height: "8px", background: BLUE }} />
-            <span style={{ fontSize: "11px", color: "#94a3b8", letterSpacing: "0.1em", fontWeight: 600 }}>FINTECH</span>
-          </div>
         </div>
       </div>
     </section>
