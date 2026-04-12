@@ -1,102 +1,79 @@
 "use client";
-import React from "react";
 import { motion } from "framer-motion";
-import { FaExternalLinkAlt } from "react-icons/fa";
+import { FaSun, FaExternalLinkAlt } from "react-icons/fa";
 
-const NAVY = "#0f172a";
-const BLUE = "#2563eb";
-const GREY = "#64748b";
-
-export default function FintechCommunity({ data }) {
-  const list = data?.community || data?.volunteering || data?.involvement || [];
-  if (!list.length) return null;
+export default function PortfolioCommunity({ data }) {
+  if (!data?.community?.length) return null;
 
   return (
-    <section id="community" style={{ background: "#f8fafc", borderTop: "1px solid #e2e8f0" }}>
-      <style>{`
-        @media (max-width: 767px) {
-          .ft-comm-inner { padding: 4rem 1.25rem !important; }
-          .ft-comm-grid { grid-template-columns: 1fr !important; }
-        }
-      `}</style>
-      <div className="ft-comm-inner" style={{ maxWidth: "1280px", margin: "0 auto", padding: "7rem 2.5rem" }}>
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }} transition={{ duration: 0.6 }}
-          style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "4rem" }}
-        >
-          <span style={{ fontSize: "11px", fontWeight: 800, color: BLUE, textTransform: "uppercase", letterSpacing: "0.2em" }}>06</span>
-          <div style={{ width: "40px", height: "2px", background: BLUE }} />
-          <span style={{ fontSize: "11px", fontWeight: 700, color: GREY, textTransform: "uppercase", letterSpacing: "0.18em" }}>Community</span>
+    <section id="community" className="relative py-28 px-6 overflow-hidden bg-[#0c0904]">
+
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute bottom-1/3 left-1/3 w-[600px] h-[500px] rounded-full"
+          style={{ background:"radial-gradient(ellipse,rgba(251,191,36,0.05),transparent 70%)" }} />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(251,191,36,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(251,191,36,0.02)_1px,transparent_1px)] bg-[size:64px_64px]" />
+      </div>
+
+      <div className="max-w-5xl mx-auto relative z-10">
+        <motion.div initial={{ opacity:0,x:-20 }} whileInView={{ opacity:1,x:0 }} viewport={{ once:true }} transition={{ duration:0.5 }}
+          className="flex items-center gap-3 mb-3">
+          <span className="text-[10px] font-black tracking-[0.35em] uppercase text-amber-400/70">[ 06 / Impact ]</span>
+          <div className="flex-1 h-px bg-gradient-to-r from-amber-500/25 to-transparent max-w-[100px]" />
         </motion.div>
 
-        <div className="ft-comm-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))", gap: "1.5rem" }}>
-          {list.map((item, i) => {
-            const title       = item.title       || item.role     || item.position || item.name || "";
-            const org         = item.organization || item.company  || item.employer || "";
-            const description = item.description  || item.impact  || "";
-            const period      = item.duration     || item.years   || item.period   || item.date || "";
-            const link        = item.link         || item.url     || item.website  || "";
+        <motion.h2 initial={{ opacity:0,y:18 }} whileInView={{ opacity:1,y:0 }} viewport={{ once:true }} transition={{ duration:0.6,delay:0.05 }}
+          className="text-4xl sm:text-6xl font-black tracking-tighter text-white mb-4">
+          Community<span className="text-amber-400">.</span>
+        </motion.h2>
+        <motion.p initial={{ opacity:0 }} whileInView={{ opacity:1 }} viewport={{ once:true }} transition={{ duration:0.5,delay:0.15 }}
+          className="text-white/30 text-sm mb-16 max-w-sm">
+          Giving back and making a difference.
+        </motion.p>
 
-            return (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.06 }}
-              style={{
-                background: "#ffffff",
-                border: "1px solid #e2e8f0",
-                borderTop: `3px solid ${BLUE}`,
-                padding: "2rem",
-                boxShadow: "0 1px 8px rgba(15,23,42,0.04)",
-                transition: "box-shadow 0.2s ease",
-                display: "flex", flexDirection: "column",
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.boxShadow = "0 6px 24px rgba(37,99,235,0.08)"}
-              onMouseLeave={(e) => e.currentTarget.style.boxShadow = "0 1px 8px rgba(15,23,42,0.04)"}
-            >
-              <h3 style={{ fontSize: "16px", fontWeight: 800, color: NAVY, margin: "0 0 6px", letterSpacing: "-0.01em" }}>
-                {title}
-              </h3>
-              {org && (
-                <div style={{ fontSize: "12px", fontWeight: 600, color: BLUE, marginBottom: "0.8rem" }}>
-                  {org}
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {data.community.map((item, index) => (
+            <motion.div key={index}
+              initial={{ opacity:0,y:24 }} whileInView={{ opacity:1,y:0 }} viewport={{ once:true }}
+              transition={{ duration:0.5,delay:index*0.08 }}
+              whileHover={{ y:-5 }}
+              className="group relative border border-amber-500/15 rounded-2xl p-6 overflow-hidden transition-all duration-400 hover:border-amber-400/40 hover:shadow-[0_16px_50px_rgba(251,191,36,0.1)]"
+              style={{ background:"rgba(251,191,36,0.03)" }}>
+
+              {/* Warm hover glow */}
+              <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none"
+                style={{ background:"linear-gradient(135deg,rgba(251,191,36,0.06),rgba(249,115,22,0.03),transparent)" }} />
+
+              {/* Sun icon with radiating warmth */}
+              <div className="relative w-11 h-11 mb-5">
+                <div className="w-11 h-11 rounded-xl border border-amber-500/25 flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+                  style={{ background:"rgba(251,191,36,0.08)" }}>
+                  <FaSun className="w-4 h-4 text-amber-400/80" />
                 </div>
-              )}
-              {description && (
-                <p style={{ fontSize: "13px", color: GREY, lineHeight: 1.7, margin: "0 0 1rem", fontWeight: 400, flex: 1 }}>
-                  {description}
-                </p>
-              )}
-              {(period || link) && (
-                <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginTop: "auto", paddingTop: "1rem", borderTop: "1px solid #f1f5f9", flexWrap: "wrap" }}>
-                  {period && (
-                    <span style={{ fontSize: "10px", fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.12em" }}>
-                      {period}
-                    </span>
-                  )}
-                  {link && (
-                    <a href={link} target="_blank" rel="noopener noreferrer"
-                      style={{
-                        display: "flex", alignItems: "center", gap: "5px",
-                        fontSize: "11px", fontWeight: 600, color: BLUE,
-                        textDecoration: "none", transition: "opacity 0.2s",
-                        marginLeft: "auto",
-                      }}
-                      onMouseEnter={(e) => e.currentTarget.style.opacity = "0.7"}
-                      onMouseLeave={(e) => e.currentTarget.style.opacity = "1"}
-                    >
-                      Visit <FaExternalLinkAlt size={9} />
-                    </a>
-                  )}
+              </div>
+
+              <div className="flex items-start justify-between gap-2 mb-2 relative z-10">
+                <div>
+                  <h3 className="font-black text-white text-sm mb-0.5 group-hover:text-amber-200 transition-colors duration-300">{item.role}</h3>
+                  <p className="text-xs font-bold text-amber-400/70">{item.organization}</p>
                 </div>
+                {item.link && (
+                  <a href={item.link} target="_blank" rel="noopener noreferrer"
+                    className="text-white/20 hover:text-amber-400 transition-colors mt-0.5 flex-shrink-0">
+                    <FaExternalLinkAlt className="w-3.5 h-3.5" />
+                  </a>
+                )}
+              </div>
+
+              {item.description && (
+                <p className="text-sm text-white/35 leading-relaxed mt-3 relative z-10">{item.description}</p>
               )}
+
+              {/* Bottom warm line */}
+              <motion.div initial={{ scaleX:0 }} whileHover={{ scaleX:1 }}
+                className="absolute bottom-0 left-0 right-0 h-px origin-left"
+                style={{ background:"linear-gradient(90deg,transparent,#fbbf24,#f97316,transparent)" }} />
             </motion.div>
-            );
-          })}
+          ))}
         </div>
       </div>
     </section>
