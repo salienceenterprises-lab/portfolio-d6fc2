@@ -1,54 +1,38 @@
 "use client";
-import React from "react";
-import portfolioData from "../profile.json";
-import FintechNav from "./components/nav";
-import FintechHero from "./components/hero";
-import FintechAbout from "./components/about";
-import FintechEducation from "./components/education";
-import FintechExperience from "./components/experience";
-import FintechProjects from "./components/projects";
-import FintechSkills from "./components/skills";
-import FintechCommunity from "./components/community";
-import FintechContact from "./components/contact";
 
+import React from "react";
+// Import the JSON that your deployment script pushes to the root
+import portfolioData from "../profile.json"; 
+
+import PortfolioNav from "./components/nav";
+import PortfolioHero from "./components/hero";
+import PortfolioAbout from "./components/about";
+import PortfolioExperience from "./components/experience";
+import PortfolioProjects from "./components/projects";
+import PortfolioSkills from "./components/skills";
+import PortfolioContact from "./components/contact";
+import PortfolioFooter from "./components/footer";
+import PortfolioCommunity from "./components/community";
+import PortfolioEducation from "./components/education";
+
+// No props here! Next.js needs a clean default export for pages.
 export default function DeployedPortfolio() {
   const data = portfolioData;
 
-  if (!data) return (
-    <div style={{
-      minHeight: "100vh", background: "#f8fafc",
-      display: "flex", alignItems: "center", justifyContent: "center",
-    }}>
-      <span style={{ fontSize: "12px", color: "#94a3b8", letterSpacing: "0.2em", textTransform: "uppercase" }}>
-        Loading…
-      </span>
-    </div>
-  );
+  if (!data) return <div className="text-white p-10">Loading Portfolio...</div>;
 
   return (
-    <div style={{ background: "#f8fafc", minHeight: "100vh" }}>
-      <style>{`
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
-        ::placeholder { color: #cbd5e1; }
-        textarea { resize: none; }
-        @media (max-width: 1023px) {
-          .ft-two-col { grid-template-columns: 1fr !important; }
-        }
-        @media (max-width: 767px) {
-          section > div { padding-left: 1.5rem !important; padding-right: 1.5rem !important; }
-        }
-      `}</style>
-
-      <FintechNav data={data} />
-      <FintechHero data={data} />
-      <FintechAbout data={data} />
-      <FintechEducation data={data} />
-      <FintechExperience data={data} />
-      <FintechProjects data={data} />
-      <FintechSkills data={data} />
-      <FintechCommunity data={data} />
-      <FintechContact data={data} />
+    <div className="min-h-screen bg-[#0a0a0f] text-white scroll-smooth">
+      <PortfolioNav data={data} />
+      <PortfolioHero data={data} />
+      <PortfolioAbout data={data} />
+      <PortfolioEducation data={data} />
+      <PortfolioExperience data={data} />
+      <PortfolioProjects data={data} />
+      <PortfolioSkills data={data} />
+      <PortfolioCommunity data={data} />
+      <PortfolioContact data={data} />
+      <PortfolioFooter data={data} />
     </div>
   );
 }
