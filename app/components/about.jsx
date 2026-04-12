@@ -1,153 +1,94 @@
 "use client";
-import React from "react";
 import { motion } from "framer-motion";
-import { FaMapMarkerAlt, FaEnvelope, FaGithub, FaLinkedin, FaGlobe } from "react-icons/fa";
 
-const NAVY = "#0f172a";
-const BLUE = "#2563eb";
-const GREY = "#64748b";
-
-const fadeUp = (delay = 0) => ({
-  initial: { opacity: 0, y: 20 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true },
-  transition: { duration: 0.6, ease: [0.25, 1, 0.5, 1], delay },
-});
-
-export default function FintechAbout({ data }) {
-  const skills = data?.skills || [];
-  const flatSkills = skills.flatMap?.((s) =>
-    typeof s === "object" && s.items ? s.items : [s]
-  ) || skills;
-
-  const infoRows = [
-    data?.location && { icon: <FaMapMarkerAlt size={13} />, label: "Location", value: data.location, href: null },
-    data?.email    && { icon: <FaEnvelope size={13} />,     label: "Email",    value: data.email,    href: `mailto:${data.email}` },
-    data?.github   && { icon: <FaGithub size={13} />,       label: "GitHub",   value: "@" + data.github.split("/").pop(), href: data.github },
-    data?.linkedin && { icon: <FaLinkedin size={13} />,     label: "LinkedIn", value: "View Profile", href: data.linkedin },
-    data?.website  && { icon: <FaGlobe size={13} />,        label: "Website",  value: data.website,  href: data.website },
-  ].filter(Boolean);
+export default function PortfolioAbout({ data }) {
+  const topSkills = data?.skills?.slice(0, 8) || [];
+  const hasPhoto = !!data?.heroImageBase64;
 
   return (
-    <section id="about" style={{
-      background: "#ffffff",
-      borderTop: "1px solid #e2e8f0",
-      position: "relative",
-    }}>
-      <style>{`
-        @media (max-width: 767px) {
-          .ft-about-inner { padding: 4rem 1.25rem !important; }
-          .ft-about-grid { grid-template-columns: 1fr !important; gap: 2.5rem !important; }
-        }
-      `}</style>
-      <div className="ft-about-inner" style={{ maxWidth: "1280px", margin: "0 auto", padding: "7rem 2.5rem" }}>
-        {/* Section header */}
-        <motion.div {...fadeUp(0)} style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "4rem" }}>
-          <span style={{ fontSize: "11px", fontWeight: 800, color: BLUE, textTransform: "uppercase", letterSpacing: "0.2em" }}>01</span>
-          <div style={{ width: "40px", height: "2px", background: BLUE }} />
-          <span style={{ fontSize: "11px", fontWeight: 700, color: GREY, textTransform: "uppercase", letterSpacing: "0.18em" }}>About</span>
+    <section id="about" className="relative py-28 px-6 overflow-hidden bg-[#100b05]">
+
+      {/* Ambient warm */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 right-0 w-[600px] h-[500px] rounded-full translate-x-1/3 -translate-y-1/4"
+          style={{ background: "radial-gradient(ellipse,rgba(251,191,36,0.06),transparent 70%)" }} />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(251,191,36,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(251,191,36,0.02)_1px,transparent_1px)] bg-[size:64px_64px]" />
+      </div>
+
+      <div className="max-w-6xl mx-auto relative z-10">
+
+        {/* Section label */}
+        <motion.div initial={{ opacity:0,x:-20 }} whileInView={{ opacity:1,x:0 }} viewport={{ once:true }} transition={{ duration:0.5 }}
+          className="flex items-center gap-3 mb-3">
+          <span className="text-[10px] font-black tracking-[0.35em] uppercase text-amber-400/70">[ 01 / About ]</span>
+          <div className="flex-1 h-px bg-gradient-to-r from-amber-500/25 to-transparent max-w-[100px]" />
         </motion.div>
 
-        <div className="ft-about-grid" style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: "5rem", alignItems: "start" }}>
-          {/* Left: bio + skills */}
-          <div>
-            <motion.h2 {...fadeUp(0.05)} style={{
-              fontSize: "clamp(2rem, 4vw, 3.5rem)",
-              fontWeight: 900, color: NAVY,
-              letterSpacing: "-0.03em", lineHeight: 1.1,
-              margin: "0 0 2rem",
-            }}>
-              The Professional<br />
-              <span style={{ color: BLUE }}>Behind the Work</span>
-            </motion.h2>
+        <motion.h2 initial={{ opacity:0,y:18 }} whileInView={{ opacity:1,y:0 }} viewport={{ once:true }} transition={{ duration:0.6,delay:0.05 }}
+          className="text-4xl sm:text-6xl font-black tracking-tighter text-white mb-16">
+          Who I Am<span className="text-amber-400">.</span>
+        </motion.h2>
 
-            <motion.p {...fadeUp(0.1)} style={{
-              fontSize: "15.5px", color: GREY,
-              lineHeight: 1.85, margin: "0 0 3rem",
-              fontWeight: 400,
-            }}>
-              {data?.bio || "A results-driven professional at the intersection of business strategy and technology. Committed to delivering measurable impact through analytical rigor and innovative thinking."}
-            </motion.p>
+        <div className={`grid gap-16 items-center ${hasPhoto ? "grid-cols-1 lg:grid-cols-2" : "grid-cols-1 max-w-3xl"}`}>
 
-            {flatSkills.length > 0 && (
-              <motion.div {...fadeUp(0.15)}>
-                <div style={{
-                  fontSize: "10px", fontWeight: 800, color: GREY,
-                  textTransform: "uppercase", letterSpacing: "0.2em",
-                  marginBottom: "1rem",
-                }}>
-                  Core Competencies
+          {/* Bio */}
+          <motion.div initial={{ opacity:0,x:-30 }} whileInView={{ opacity:1,x:0 }} viewport={{ once:true }}
+            transition={{ duration:0.6,type:"spring",stiffness:80 }}>
+            {/* Warm accent quote line */}
+            <div className="relative mb-8">
+              <div className="absolute left-0 top-0 bottom-0 w-0.5 rounded-full"
+                style={{ background: "linear-gradient(180deg,#fbbf24,#f97316,transparent)" }} />
+              <div className="pl-6">
+                <p className="text-white/55 text-base leading-[1.95] font-light">
+                  {data?.bio || data?.about || "Portfolio bio goes here."}
+                </p>
+              </div>
+            </div>
+
+            {topSkills.length > 0 && (
+              <div className="mt-10">
+                <div className="flex items-center gap-3 mb-5">
+                  <span className="text-[9px] font-black uppercase tracking-[0.35em] text-white/25">Core Stack</span>
+                  <div className="flex-1 h-px bg-white/[0.06]" />
                 </div>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
-                  {flatSkills.slice(0, 14).map((skill, i) => {
-                    const label = typeof skill === "string" ? skill : skill?.name || String(skill);
-                    return (
-                      <span key={i} style={{
-                        fontSize: "12px", fontWeight: 600,
-                        color: NAVY,
-                        background: "#f8fafc",
-                        border: "1px solid #e2e8f0",
-                        padding: "5px 14px",
-                        letterSpacing: "0.02em",
-                        transition: "all 0.2s ease",
-                        cursor: "default",
-                      }}
-                        onMouseEnter={(e) => { e.currentTarget.style.borderColor = BLUE; e.currentTarget.style.color = BLUE; e.currentTarget.style.background = "rgba(37,99,235,0.04)"; }}
-                        onMouseLeave={(e) => { e.currentTarget.style.borderColor = "#e2e8f0"; e.currentTarget.style.color = NAVY; e.currentTarget.style.background = "#f8fafc"; }}
-                      >
-                        {label}
-                      </span>
-                    );
-                  })}
-                </div>
-              </motion.div>
-            )}
-          </div>
-
-          {/* Right: contact card */}
-          {infoRows.length > 0 && (
-            <motion.div {...fadeUp(0.1)}>
-              <div style={{
-                background: "#f8fafc",
-                border: "1px solid #e2e8f0",
-                padding: "2.5rem",
-                boxShadow: "0 2px 16px rgba(15,23,42,0.04)",
-              }}>
-                <div style={{
-                  fontSize: "10px", fontWeight: 800, color: BLUE,
-                  textTransform: "uppercase", letterSpacing: "0.2em",
-                  marginBottom: "1.8rem", display: "flex", alignItems: "center", gap: "8px",
-                }}>
-                  <div style={{ width: "16px", height: "2px", background: BLUE }} />
-                  Contact Details
-                </div>
-
-                <div style={{ display: "flex", flexDirection: "column", gap: "0" }}>
-                  {infoRows.map((row, i) => (
-                    <div key={i} style={{
-                      display: "flex", alignItems: "center", gap: "14px",
-                      padding: "13px 0",
-                      borderBottom: i < infoRows.length - 1 ? "1px solid #e2e8f0" : "none",
-                    }}>
-                      <div style={{ color: BLUE, flexShrink: 0 }}>{row.icon}</div>
-                      <div>
-                        <div style={{ fontSize: "10px", fontWeight: 700, color: GREY, textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: "2px" }}>
-                          {row.label}
-                        </div>
-                        {row.href ? (
-                          <a href={row.href} target="_blank" rel="noopener noreferrer"
-                            style={{ fontSize: "13px", fontWeight: 500, color: NAVY, textDecoration: "none", transition: "color 0.2s" }}
-                            onMouseEnter={(e) => e.currentTarget.style.color = BLUE}
-                            onMouseLeave={(e) => e.currentTarget.style.color = NAVY}
-                          >
-                            {row.value}
-                          </a>
-                        ) : (
-                          <span style={{ fontSize: "13px", fontWeight: 500, color: NAVY }}>{row.value}</span>
-                        )}
-                      </div>
-                    </div>
+                <div className="flex flex-wrap gap-2.5">
+                  {topSkills.map((skill, i) => (
+                    <motion.span key={i}
+                      initial={{ opacity:0,scale:0.7 }} whileInView={{ opacity:1,scale:1 }} viewport={{ once:true }}
+                      transition={{ duration:0.3,delay:i*0.05 }}
+                      whileHover={{ scale:1.08 }}
+                      className="px-3.5 py-1.5 text-[10px] font-bold rounded-full cursor-default transition-all duration-200 border border-amber-500/20 text-amber-300/70 hover:border-amber-400/60 hover:text-amber-200"
+                      style={{ background: "rgba(251,191,36,0.06)" }}>
+                      {skill}
+                    </motion.span>
                   ))}
+                </div>
+              </div>
+            )}
+          </motion.div>
+
+          {/* Photo — only rendered if uploaded */}
+          {hasPhoto && (
+            <motion.div initial={{ opacity:0,x:30 }} whileInView={{ opacity:1,x:0 }} viewport={{ once:true }}
+              transition={{ duration:0.6,delay:0.1,type:"spring",stiffness:80 }}
+              className="flex justify-center">
+              <div className="relative w-72 h-80">
+                {/* Warm glow */}
+                <div className="absolute inset-0 scale-110 blur-2xl rounded-[60%_40%_55%_45%]"
+                  style={{ background: "radial-gradient(ellipse,rgba(251,191,36,0.2),rgba(249,115,22,0.1),transparent 70%)" }} />
+                {/* Orbit ring */}
+                <div className="absolute -inset-4 border border-dashed border-amber-400/15 rounded-[60%_40%_55%_45%]" />
+                {/* Photo */}
+                <div className="absolute inset-0 overflow-hidden border border-amber-400/25 rounded-[60%_40%_55%_45%]">
+                  <img src={data.heroImageBase64} alt={data.name} className="w-full h-full object-cover scale-110" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#100b05]/50 to-transparent" />
+                </div>
+                {/* Name tag */}
+                <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap">
+                  <div className="px-4 py-1.5 rounded-full border border-amber-500/25 backdrop-blur-sm"
+                    style={{ background:"rgba(251,191,36,0.07)" }}>
+                    <p className="text-[10px] font-black text-amber-300/80 uppercase tracking-wider">{data?.title}</p>
+                  </div>
                 </div>
               </div>
             </motion.div>
