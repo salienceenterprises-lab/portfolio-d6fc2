@@ -1,191 +1,106 @@
 "use client";
-import React from "react";
 import { motion } from "framer-motion";
-import { FaGithub, FaExternalLinkAlt } from "react-icons/fa";
+import { FaGithub, FaExternalLinkAlt, FaFolder } from "react-icons/fa";
 
-const NAVY = "#0f172a";
-const BLUE = "#2563eb";
-const GREY = "#64748b";
-
-export default function FintechProjects({ data }) {
-  const list = data?.projects || [];
-  if (!list.length) return null;
+export default function PortfolioProjects({ data }) {
+  if (!data?.projects?.length) return null;
 
   return (
-    <section id="projects" style={{ background: "#f8fafc", borderTop: "1px solid #e2e8f0" }}>
-      <style>{`
-        @media (max-width: 767px) {
-          .ft-proj-inner { padding: 4rem 1.25rem !important; }
-          .ft-proj-grid { grid-template-columns: 1fr !important; }
-        }
-      `}</style>
-      <div className="ft-proj-inner" style={{ maxWidth: "1280px", margin: "0 auto", padding: "7rem 2.5rem" }}>
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }} transition={{ duration: 0.6 }}
-          style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "4rem", flexWrap: "wrap", gap: "1rem" }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-            <span style={{ fontSize: "11px", fontWeight: 800, color: BLUE, textTransform: "uppercase", letterSpacing: "0.2em" }}>04</span>
-            <div style={{ width: "40px", height: "2px", background: BLUE }} />
-            <span style={{ fontSize: "11px", fontWeight: 700, color: GREY, textTransform: "uppercase", letterSpacing: "0.18em" }}>Projects</span>
-          </div>
-          <span style={{ fontSize: "12px", color: GREY }}>
-            {list.length} project{list.length !== 1 ? "s" : ""}
-          </span>
+    <section id="projects" className="relative py-28 px-6 overflow-hidden bg-[#100b05]">
+
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 right-0 w-[700px] h-[600px] rounded-full translate-x-1/3 -translate-y-1/4"
+          style={{ background:"radial-gradient(ellipse,rgba(249,115,22,0.06),transparent 70%)" }} />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(251,191,36,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(251,191,36,0.02)_1px,transparent_1px)] bg-[size:64px_64px]" />
+      </div>
+
+      <div className="max-w-6xl mx-auto relative z-10">
+        <motion.div initial={{ opacity:0,x:-20 }} whileInView={{ opacity:1,x:0 }} viewport={{ once:true }} transition={{ duration:0.5 }}
+          className="flex items-center gap-3 mb-3">
+          <span className="text-[10px] font-black tracking-[0.35em] uppercase text-amber-400/70">[ 04 / Work ]</span>
+          <div className="flex-1 h-px bg-gradient-to-r from-amber-500/25 to-transparent max-w-[100px]" />
         </motion.div>
 
-        <div className="ft-proj-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))", gap: "1.5rem" }}>
-          {list.map((project, i) => {
-            const title    = project.title || project.name || "";
-            const desc     = project.description || "";
-            const image    = project.imageBase64 || project.image || "";
-            const github   = project.github  || project.githubUrl || project.repo || "";
-            const liveUrl  = project.demo    || project.live || project.url || project.link || project.liveUrl || "";
-            const tags =
-              Array.isArray(project.stack)        ? project.stack :
-              Array.isArray(project.tags)          ? project.tags :
-              Array.isArray(project.technologies)  ? project.technologies :
-              Array.isArray(project.tech)          ? project.tech : [];
+        <motion.h2 initial={{ opacity:0,y:18 }} whileInView={{ opacity:1,y:0 }} viewport={{ once:true }} transition={{ duration:0.6,delay:0.05 }}
+          className="text-4xl sm:text-6xl font-black tracking-tighter text-white mb-4">
+          Projects<span className="text-amber-400">.</span>
+        </motion.h2>
+        <motion.p initial={{ opacity:0 }} whileInView={{ opacity:1 }} viewport={{ once:true }} transition={{ duration:0.5,delay:0.15 }}
+          className="text-white/30 text-sm mb-16 max-w-sm">
+          Selected work — crafted with care.
+        </motion.p>
 
-            return (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.06 }}
-                style={{
-                  background: "#ffffff",
-                  border: "1px solid #e2e8f0",
-                  display: "flex", flexDirection: "column",
-                  boxShadow: "0 1px 8px rgba(15,23,42,0.04)",
-                  transition: "all 0.25s ease",
-                  position: "relative",
-                  overflow: "hidden",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.boxShadow = "0 8px 32px rgba(37,99,235,0.1)";
-                  e.currentTarget.style.borderColor = "rgba(37,99,235,0.25)";
-                  e.currentTarget.style.transform = "translateY(-2px)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow = "0 1px 8px rgba(15,23,42,0.04)";
-                  e.currentTarget.style.borderColor = "#e2e8f0";
-                  e.currentTarget.style.transform = "translateY(0)";
-                }}
-              >
-                {/* Top blue bar */}
-                <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "3px", background: BLUE, zIndex: 1 }} />
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {data.projects.map((proj, index) => (
+            <motion.div key={index}
+              initial={{ opacity:0,y:28 }} whileInView={{ opacity:1,y:0 }} viewport={{ once:true }}
+              transition={{ duration:0.5,delay:index*0.08 }}
+              whileHover={{ y:-6 }}
+              className="group relative border border-amber-500/15 overflow-hidden rounded-2xl transition-all duration-300 hover:border-amber-400/40 hover:shadow-[0_20px_60px_rgba(251,191,36,0.1)]"
+              style={{ background:"rgba(251,191,36,0.03)" }}>
 
-                {/* Project image */}
-                {image ? (
-                  <div style={{ position: "relative", height: "180px", overflow: "hidden" }}>
-                    <img
-                      src={image}
-                      alt={title}
-                      style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", transition: "transform 0.5s ease" }}
-                      onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(1.05)"; }}
-                      onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; }}
-                    />
-                    <div style={{
-                      position: "absolute", inset: 0,
-                      background: "linear-gradient(to bottom, transparent 40%, rgba(255,255,255,0.95))",
-                    }} />
-                    {/* Links overlay */}
-                    <div style={{ position: "absolute", bottom: "10px", right: "12px", display: "flex", gap: "8px" }}>
-                      {github && (
-                        <a href={github} target="_blank" rel="noopener noreferrer"
-                          onClick={(e) => e.stopPropagation()}
-                          style={{
-                            display: "flex", alignItems: "center", gap: "5px",
-                            fontSize: "10px", fontWeight: 700, textTransform: "uppercase",
-                            color: "#fff", background: NAVY,
-                            padding: "5px 10px", textDecoration: "none",
-                          }}>
-                          <FaGithub size={10} /> Code
-                        </a>
-                      )}
-                      {liveUrl && (
-                        <a href={liveUrl} target="_blank" rel="noopener noreferrer"
-                          onClick={(e) => e.stopPropagation()}
-                          style={{
-                            display: "flex", alignItems: "center", gap: "5px",
-                            fontSize: "10px", fontWeight: 700, textTransform: "uppercase",
-                            color: "#fff", background: BLUE,
-                            padding: "5px 10px", textDecoration: "none",
-                          }}>
-                          <FaExternalLinkAlt size={9} /> Live
-                        </a>
-                      )}
+              {/* With image */}
+              {proj.imageBase64 ? (
+                <div className="relative h-48 overflow-hidden">
+                  <img src={proj.imageBase64} alt={proj.title}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#100b05]/30 to-[#100b05]" />
+                  {/* Heat shimmer on hover */}
+                  <motion.div
+                    initial={{ x:"-100%",opacity:0 }} whileHover={{ x:"200%",opacity:1 }}
+                    transition={{ duration:0.7 }}
+                    className="absolute inset-y-0 w-1/3 bg-gradient-to-r from-transparent via-amber-400/15 to-transparent skew-x-12 pointer-events-none" />
+                  <div className="absolute bottom-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300 z-10">
+                    {proj.github && (
+                      <a href={proj.github} target="_blank" rel="noopener noreferrer"
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider text-white/70 hover:text-amber-300 border border-amber-500/30 backdrop-blur-sm transition-colors"
+                        style={{ background:"rgba(12,9,4,0.85)" }}>
+                        <FaGithub className="w-3 h-3" /> Code
+                      </a>
+                    )}
+                    {proj.demo && (
+                      <a href={proj.demo} target="_blank" rel="noopener noreferrer"
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider text-black transition-colors"
+                        style={{ background:"linear-gradient(135deg,#fbbf24,#f97316)" }}>
+                        <FaExternalLinkAlt className="w-2.5 h-2.5" /> Live
+                      </a>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                /* No image — warm header strip */
+                <div className="relative h-24 border-b border-amber-500/10 overflow-hidden flex items-center px-5"
+                  style={{ background:"linear-gradient(135deg,rgba(251,191,36,0.06),rgba(249,115,22,0.03),rgba(12,9,4,0))" }}>
+                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-7xl font-black select-none leading-none tabular-nums"
+                    style={{ WebkitTextFillColor:"transparent", WebkitTextStrokeWidth:"1px", WebkitTextStrokeColor:"rgba(251,191,36,0.08)" }}>
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <div className="flex items-center gap-3 relative z-10">
+                    <FaFolder className="w-5 h-5 text-amber-400/40 flex-shrink-0" />
+                    <div className="flex gap-2">
+                      {proj.github && <a href={proj.github} target="_blank" rel="noopener noreferrer" className="text-white/30 hover:text-amber-400 transition-colors"><FaGithub className="w-4 h-4" /></a>}
+                      {proj.demo && <a href={proj.demo} target="_blank" rel="noopener noreferrer" className="text-white/30 hover:text-amber-400 transition-colors"><FaExternalLinkAlt className="w-3.5 h-3.5" /></a>}
                     </div>
                   </div>
-                ) : (
-                  /* No image: header strip with index + links */
-                  <div style={{
-                    height: "64px", padding: "0 1.8rem",
-                    display: "flex", alignItems: "center", justifyContent: "space-between",
-                    background: "rgba(37,99,235,0.04)",
-                    borderBottom: "1px solid #e2e8f0",
-                  }}>
-                    <span style={{ fontSize: "28px", fontWeight: 900, color: "rgba(37,99,235,0.08)", letterSpacing: "-0.04em" }}>
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <div style={{ display: "flex", gap: "10px" }}>
-                      {github && (
-                        <a href={github} target="_blank" rel="noopener noreferrer"
-                          style={{ color: "#94a3b8", textDecoration: "none", transition: "color 0.2s" }}
-                          onMouseEnter={(e) => e.currentTarget.style.color = BLUE}
-                          onMouseLeave={(e) => e.currentTarget.style.color = "#94a3b8"}
-                          onClick={(e) => e.stopPropagation()}>
-                          <FaGithub size={15} />
-                        </a>
-                      )}
-                      {liveUrl && (
-                        <a href={liveUrl} target="_blank" rel="noopener noreferrer"
-                          style={{ color: "#94a3b8", textDecoration: "none", transition: "color 0.2s" }}
-                          onMouseEnter={(e) => e.currentTarget.style.color = BLUE}
-                          onMouseLeave={(e) => e.currentTarget.style.color = "#94a3b8"}
-                          onClick={(e) => e.stopPropagation()}>
-                          <FaExternalLinkAlt size={13} />
-                        </a>
-                      )}
-                    </div>
+                </div>
+              )}
+
+              <div className="p-5">
+                <h3 className="font-black text-white text-sm mb-2 group-hover:text-amber-200 transition-colors duration-300">{proj.title}</h3>
+                {proj.description && <p className="text-sm text-white/35 leading-relaxed mb-4">{proj.description}</p>}
+                {proj.tech?.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 pt-4 border-t border-white/[0.05]">
+                    {proj.tech.filter(t => t?.trim()).map((tech) => (
+                      <span key={tech} className="text-[9px] font-bold uppercase tracking-wider text-amber-400/50 px-2 py-0.5 rounded-full border border-amber-500/15"
+                        style={{ background:"rgba(251,191,36,0.05)" }}>
+                        {tech}
+                      </span>
+                    ))}
                   </div>
                 )}
-
-                {/* Card body */}
-                <div style={{ padding: "1.8rem", flex: 1, display: "flex", flexDirection: "column" }}>
-                  <h3 style={{ fontSize: "17px", fontWeight: 800, color: NAVY, letterSpacing: "-0.02em", margin: "0 0 0.6rem" }}>
-                    {title}
-                  </h3>
-
-                  {desc && (
-                    <p style={{ fontSize: "13.5px", color: GREY, lineHeight: 1.7, margin: "0 0 1.25rem", fontWeight: 400, flex: 1 }}>
-                      {desc}
-                    </p>
-                  )}
-
-                  {tags.length > 0 && (
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", paddingTop: "1rem", borderTop: "1px solid #f1f5f9" }}>
-                      {tags.filter(Boolean).map((tag, j) => (
-                        <span key={j} style={{
-                          fontSize: "10px", fontWeight: 600, textTransform: "uppercase",
-                          letterSpacing: "0.08em", color: BLUE,
-                          background: "rgba(37,99,235,0.06)",
-                          border: "1px solid rgba(37,99,235,0.15)",
-                          padding: "3px 10px",
-                        }}>
-                          {typeof tag === "string" ? tag : tag?.name || String(tag)}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </motion.div>
-            );
-          })}
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>
