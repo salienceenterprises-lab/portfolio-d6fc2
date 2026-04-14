@@ -2,6 +2,7 @@
 import { motion } from "framer-motion";
 
 export default function PortfolioAbout({ data }) {
+  if (!data) return null;
   const topSkills = data?.skills?.slice(0, 8) || [];
   const hasPhoto = !!data?.heroImageBase64;
 
